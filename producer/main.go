@@ -4,6 +4,8 @@ import (
 	"github.com/burythehammer/twitter-kafka/producer/twitter"
 	"github.com/dghubble/go-twitter/twitter"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"os"
+	"strings"
 )
 
 const TwitterTopic = "twitter-tweets"
@@ -21,10 +23,18 @@ func main() {
 		topic:  TwitterTopic,
 	}
 
+	searchArgs := os.Args[1:]
+
+	if len(searchArgs) == 0 {
+		panic("Requires at least one search term")
+	}
+
+	query := strings.Join(searchArgs, " OR ")
+
 	client := twitterclient.CreateTwitterClient()
 
 	tweets, _, err := client.Search.Tweets(&twitter.SearchTweetParams{
-		Query: "cyberpunk",
+		Query: query,
 	})
 
 	if err != nil {
