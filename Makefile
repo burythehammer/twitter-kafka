@@ -1,6 +1,3 @@
-GOOS=linux
-GOARCH=amd64
-
 bin/consumer:
 	go build -o bin/consumer ./consumer
 	chmod +x bin/consumer
