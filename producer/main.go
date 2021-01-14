@@ -6,7 +6,7 @@ import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
-const topic = "twitter-tweets"
+const TwitterTopic = "twitter-tweets"
 
 var producerConfig = kafka.ConfigMap{
 	"bootstrap.servers":  "localhost",
@@ -18,13 +18,13 @@ var producerConfig = kafka.ConfigMap{
 func main() {
 	dkp := KafkaProducer{
 		config: producerConfig,
-		topic:  topic,
+		topic:  TwitterTopic,
 	}
 
 	client := twitterclient.CreateTwitterClient()
 
 	tweets, _, err := client.Search.Tweets(&twitter.SearchTweetParams{
-		Query: "bitcoin",
+		Query: "cyberpunk",
 	})
 
 	if err != nil {
