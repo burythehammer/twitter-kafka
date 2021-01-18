@@ -7,7 +7,7 @@ bin/producer:
 	chmod +x bin/producer
 
 clean:
-	rm -rf bin
+	rm -rf bin out
 
 fmt:
 	go fmt ./...

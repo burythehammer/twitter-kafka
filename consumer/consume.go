@@ -43,7 +43,7 @@ func (kc KafkaConsumer) consume() {
 
 func createTopicFolder(topic string) string {
 	now := time.Now()
-	directoryName := fmt.Sprintf("./data/%d/%s", now.Unix(), topic)
+	directoryName := fmt.Sprintf("./out/%d/%s", now.Unix(), topic)
 	err := os.MkdirAll(directoryName, 0755)
 
 	if err != nil {
