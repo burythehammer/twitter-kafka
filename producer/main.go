@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/burythehammer/twitter-kafka/producer/twitter"
 	"github.com/dghubble/go-twitter/twitter"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
@@ -8,7 +10,7 @@ import (
 	"strings"
 )
 
-const TwitterTopic = "twitter-tweets"
+const TwitterTopic = "twitter_tweets"
 
 var producerConfig = kafka.ConfigMap{
 	"bootstrap.servers":  "localhost",
@@ -41,16 +43,24 @@ func main() {
 		panic(err)
 	}
 
-	tweetStatuses := getTweetText(tweets.Statuses)
+	tweetStatuses := marshalTweet(tweets.Statuses)
 	dkp.Produce(tweetStatuses)
 }
 
-func getTweetText(tweets []twitter.Tweet) []string {
+func marshalTweet(tweets []twitter.Tweet) []string {
 
 	var text []string
 
 	for _, tweet := range tweets {
-		text = append(text, tweet.Text)
+
+		marshal, err := json.Marshal(tweet)
+
+		if err != nil {
+			err := fmt.Errorf("could not marshal tweet %+v, error: %s", tweet, err.Error())
+			panic(err)
+		}
+
+		text = append(text, string(marshal))
 	}
 
 	return text

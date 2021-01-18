@@ -2,7 +2,7 @@ package main
 
 import "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 
-const TwitterTopic = "twitter-tweets"
+const TwitterTopic = "popular_tweets"
 
 var consumerConfig = &kafka.ConfigMap{
 	"bootstrap.servers": "localhost",
