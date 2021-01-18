@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const TwitterTopic = "twitter_tweets"
+const twitterTopic = "twitter_tweets"
 
 var producerConfig = kafka.ConfigMap{
 	"bootstrap.servers":  "localhost",
@@ -20,9 +20,9 @@ var producerConfig = kafka.ConfigMap{
 }
 
 func main() {
-	dkp := KafkaProducer{
+	kp := KafkaProducer{
 		config: producerConfig,
-		topic:  TwitterTopic,
+		topic:  twitterTopic,
 	}
 
 	searchArgs := os.Args[1:]
@@ -44,7 +44,7 @@ func main() {
 	}
 
 	tweetStatuses := marshalTweet(tweets.Statuses)
-	dkp.Produce(tweetStatuses)
+	kp.Produce(tweetStatuses)
 }
 
 func marshalTweet(tweets []twitter.Tweet) []string {

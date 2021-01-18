@@ -10,7 +10,7 @@ type KafkaProducer struct {
 	topic  string
 }
 
-func (dkp KafkaProducer) Produce(messages []string) {
+func (kp KafkaProducer) Produce(messages []string) {
 	p, err := kafka.NewProducer(&producerConfig)
 	if err != nil {
 		panic(err)
@@ -34,7 +34,7 @@ func (dkp KafkaProducer) Produce(messages []string) {
 
 	for _, word := range messages {
 		p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &dkp.topic, Partition: kafka.PartitionAny},
+			TopicPartition: kafka.TopicPartition{Topic: &kp.topic, Partition: kafka.PartitionAny},
 			Value:          []byte(word),
 		}, nil)
 	}

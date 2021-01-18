@@ -1,8 +1,12 @@
 package main
 
-import "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+import (
+	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"sync"
+)
 
-const TwitterTopic = "popular_tweets"
+const topicPopularTweets = "popular_tweets"
+const topicAllTweets = "twitter_tweets"
 
 var consumerConfig = &kafka.ConfigMap{
 	"bootstrap.servers": "localhost",
@@ -11,9 +15,28 @@ var consumerConfig = &kafka.ConfigMap{
 }
 
 func main() {
-	dkc := KafkaConsumer{
+	var wg sync.WaitGroup
+
+	go consumeTweets(topicPopularTweets, &wg)
+	wg.Add(1)
+
+	go consumeTweets(topicAllTweets, &wg)
+	wg.Add(1)
+
+	allTweets := KafkaConsumer{
 		config: consumerConfig,
-		topic:  TwitterTopic,
+		topic:  topicPopularTweets,
 	}
-	dkc.consume()
+	go allTweets.consume()
+
+	wg.Wait()
+}
+
+func consumeTweets(topic string, wg *sync.WaitGroup) {
+	popularTweets := KafkaConsumer{
+		config: consumerConfig,
+		topic:  topic,
+	}
+	popularTweets.consume()
+	wg.Done()
 }
